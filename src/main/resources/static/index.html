@@ -4,34 +4,156 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Profit Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 20px;
         }
-        .input-container {
-            margin: 20px 0;
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
+
+        h1 {
+            color: #2d3436;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            font-weight: 600;
+        }
+
+        .input-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            color: #2d3436;
+            font-weight: 500;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
         .result {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .result h3 {
+            color: #2d3436;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: #636e72;
+            font-weight: 500;
+        }
+
+        .result-value {
+            color: #2d3436;
+            font-weight: 600;
+        }
+
+        .profit-value {
+            color: #00b894;
+        }
+
+        .error {
+            background: #fff;
+            color: #d63031;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #d63031;
             margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-    <h1>Stock Profit Analyzer</h1>
-    
-    <div class="input-container">
-        <label for="stockPrices">Enter stock prices (comma-separated):</label><br>
-        <input type="text" id="stockPrices" placeholder="e.g., 7,1,5,3,6,4" style="width: 300px;">
-        <button onclick="analyzeStock()">Analyze</button>
-    </div>
+    <div class="container">
+        <h1>Stock Profit Analyzer</h1>
+        
+        <div class="input-container">
+            <label for="stockPrices">Enter stock prices (comma-separated)</label>
+            <div class="input-group">
+                <input type="text" id="stockPrices" placeholder="e.g., 7,1,5,3,6,4">
+                <button onclick="analyzeStock()">Analyze</button>
+            </div>
+        </div>
 
-    <div id="result" class="result"></div>
+        <div id="result" class="result"></div>
+    </div>
 
     <script>
         async function analyzeStock() {
@@ -50,17 +172,28 @@
                 const data = await response.json();
                 const resultDiv = document.getElementById('result');
                 resultDiv.innerHTML = `
-                    <h3>Analysis Results:</h3>
-                    <p>Maximum Profit: ${data.maxProfit}</p>
-                    <p>Buy Day: ${data.buyDay}</p>
-                    <p>Sell Day: ${data.sellDay}</p>
+                    <h3>Analysis Results</h3>
+                    <div class="result-item">
+                        <span class="result-label">Maximum Profit</span>
+                        <span class="result-value profit-value">$${data.maxProfit}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Buy Day</span>
+                        <span class="result-value">Day ${data.buyDay}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Sell Day</span>
+                        <span class="result-value">Day ${data.sellDay}</span>
+                    </div>
                 `;
             } catch (error) {
                 document.getElementById('result').innerHTML = `
-                    <p style="color: red;">Error: ${error.message}</p>
+                    <div class="error">
+                        <strong>Error:</strong> ${error.message}
+                    </div>
                 `;
             }
         }
     </script>
 </body>
-</html> 
+</html>
