@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Profit Analyzer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .input-container {
+            margin: 20px 0;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stock Profit Analyzer</h1>
+    
+    <div class="input-container">
+        <label for="stockPrices">Enter stock prices (comma-separated):</label><br>
+        <input type="text" id="stockPrices" placeholder="e.g., 7,1,5,3,6,4" style="width: 300px;">
+        <button onclick="analyzeStock()">Analyze</button>
+    </div>
+
+    <div id="result" class="result"></div>
+
+    <script>
+        async function analyzeStock() {
+            const input = document.getElementById('stockPrices').value;
+            const prices = input.split(',').map(num => parseInt(num.trim()));
+            
+            try {
+                const response = await fetch('http://localhost:8080/stock/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(prices)
+                });
+                
+                const data = await response.json();
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `
+                    <h3>Analysis Results:</h3>
+                    <p>Maximum Profit: ${data.maxProfit}</p>
+                    <p>Buy Day: ${data.buyDay}</p>
+                    <p>Sell Day: ${data.sellDay}</p>
+                `;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <p style="color: red;">Error: ${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -12,7 +12,7 @@ import com.example.StockAnalyzer.Service.StockService;
 import com.example.StockAnalyzer.dto.StockResponse;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080") 
+@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:8081"})
 @RequestMapping("/stock")
 
 public class StockController {
